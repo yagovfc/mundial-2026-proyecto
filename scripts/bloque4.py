@@ -454,7 +454,7 @@ def analizar_y_graficar_nacimientos(
 
     #creamos una figura con dos subgraficos: por mes y por trimestre
     os.makedirs(os.path.dirname(ruta_grafico), exist_ok=True)
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5.6))
 
     #grafico por mes
     ax1.bar(
@@ -505,10 +505,27 @@ def analizar_y_graficar_nacimientos(
         fontsize=13,
         fontweight="bold",
     )
-    plt.tight_layout()
+
+    conclusion = (
+        "conclusion: se aprecia efecto de la edad relativa - T1 y T2 superan la"
+        " media trimestral (224.2),\nmientras T4 cae por debajo (~160) y"
+        " Oct-Dic son los meses con menos jugadores (muestra n = 897/1248)."
+    )
+    fig.text(
+        0.5,
+        0.02,
+        conclusion,
+        ha="center",
+        va="bottom",
+        fontsize=9.5,
+        style="italic",
+        color="#2d3748",
+    )
+
+    #dejamos margen abajo (0.12) para que el texto no se solape con los ejes
+    plt.tight_layout(rect=[0, 0.12, 1, 0.94])
     plt.savefig(ruta_grafico, dpi=200)
     plt.close(fig)
-    print(f"\nGráfico guardado en: {ruta_grafico}")
 
 
 def main():
