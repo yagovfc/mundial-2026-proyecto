@@ -221,3 +221,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+*.env
+secrets.json
+~$*.xlsx
+~$*.pbix
+.pbi/localSettings.json
+.vscode/
