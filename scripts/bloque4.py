@@ -528,11 +528,268 @@ def analizar_y_graficar_nacimientos(
     plt.close(fig)
 
 
+
+RUTA_PARTIDOS_WC26 = "data/partidosWC26.xlsx"
+RUTA_CACHE_NOMINATIM = "data/cache_nominatim_estadios.json"
+RUTA_EXCEL_ESTADIOS = "data/estadiosWC26_geocodificados.xlsx"
+HEADERS_NOMINATIM = {
+    "User-Agent": (
+        "Mundial2026Proyecto-ICAI/1.0"
+        " (https://github.com/yagovfc/mundial-2026-proyecto)"
+    )
+}
+
+CONSULTAS_RESPALDO_ESTADIOS = {
+    "estadio bbva, monterrey, mexico": [
+        "Estadio BBVA, Guadalupe, Nuevo Leon, Mexico",
+        "Estadio de Futbol Monterrey, Guadalupe, Mexico",
+        "Monterrey, Nuevo Leon, Mexico",
+    ],
+    "estadio akron, guadalajara, mexico": [
+        "Estadio Akron, Zapopan, Jalisco, Mexico",
+        "Estadio Chivas, Zapopan, Jalisco, Mexico",
+        "Guadalajara, Jalisco, Mexico",
+    ],
+}
+
+
+def _consultar_nominatim_segura(query: str) -> dict | None:
+    resp = requests.get(
+        "https://nominatim.openstreetmap.org/search",
+        params={"q": query, "format": "json", "limit": 1},
+        headers=HEADERS_NOMINATIM,
+        timeout=15,
+    )
+    resp.raise_for_status()
+    datos = resp.json()
+    if datos:
+        return {
+            "lat": float(datos[0]["lat"]),
+            "lon": float(datos[0]["lon"]),
+            "display_name": datos[0].get("display_name", query),
+            "query_usada": query,
+        }
+    return None
+
+
+def geocodificar_estadios_wc26(
+    ruta_partidos: str = RUTA_PARTIDOS_WC26,
+    ruta_cache: str = RUTA_CACHE_NOMINATIM,
+    ruta_salida: str = RUTA_EXCEL_ESTADIOS,
+) -> pd.DataFrame:
+    """lee estadios de partidosWC26.xlsx, geocodifica con Nominatim + cache y guarda Excel."""
+    df_partidos = pd.read_excel(ruta_partidos)
+
+    cache = {}
+    if os.path.exists(ruta_cache):
+        with open(ruta_cache, "r", encoding="utf-8") as f:
+            cache = json.load(f)
+
+    estadios_unicos = (
+        df_partidos[["estadio", "ciudad_partido", "pais_partido"]]
+        .dropna(subset=["estadio"])
+        .drop_duplicates(subset=["estadio"])
+        .reset_index(drop=True)
+    )
+
+    filas = []
+    consultas_nuevas = 0
+
+    for _, row in estadios_unicos.iterrows():
+        estadio = str(row["estadio"]).strip()
+        ciudad = (
+            str(row["ciudad_partido"]).strip()
+            if pd.notna(row["ciudad_partido"])
+            else ""
+        )
+        pais = (
+            str(row["pais_partido"]).strip()
+            if pd.notna(row["pais_partido"])
+            else ""
+        )
+
+        consulta_base = ", ".join(p for p in (estadio, ciudad, pais) if p)
+        clave = consulta_base.lower()
+
+        cached_entry = cache.get(clave)
+        tiene_coords_validas = (
+            isinstance(cached_entry, dict)
+            and cached_entry.get("lat") is not None
+            and cached_entry.get("lon") is not None
+        )
+
+        if tiene_coords_validas:
+            entry = cached_entry
+        else:
+            candidatos = [consulta_base] + CONSULTAS_RESPALDO_ESTADIOS.get(
+                clave, []
+            )
+            if ciudad and pais:
+                candidatos.append(f"{ciudad}, {pais}")
+
+            entry = {
+                "lat": None,
+                "lon": None,
+                "display_name": "No disponible",
+                "query_usada": consulta_base,
+            }
+            for q in candidatos:
+                try:
+                    res = _consultar_nominatim_segura(q)
+                    consultas_nuevas += 1
+                    time.sleep(1.1)
+                    if res is not None:
+                        entry = res
+                        break
+                except Exception as exc:
+                    print(f"[!] Error en Nominatim para '{q}': {exc}")
+                    time.sleep(1.1)
+
+            cache[clave] = entry
+            os.makedirs(os.path.dirname(ruta_cache), exist_ok=True)
+            with open(ruta_cache, "w", encoding="utf-8") as f:
+                json.dump(cache, f, ensure_ascii=False, indent=2)
+
+        filas.append({
+            "estadio": estadio,
+            "ciudad_partido": ciudad,
+            "pais_partido": pais,
+            "latitud": entry.get("lat"),
+            "longitud": entry.get("lon"),
+            "osm_nombre": entry.get("display_name", "No disponible"),
+        })
+
+    df_estadios = pd.DataFrame(filas)
+    os.makedirs(os.path.dirname(ruta_salida), exist_ok=True)
+    df_estadios.to_excel(ruta_salida, index=False)
+
+    validos = df_estadios.dropna(subset=["latitud", "longitud"])
+    print(
+        f"Estadios geocodificados: {len(validos)}/{len(df_estadios)} "
+        f"(consultas nuevas: {consultas_nuevas}) -> {ruta_salida}"
+    )
+    return df_estadios
+
+
+import plotly.express as px
+import streamlit as st
+from streamlit.runtime import exists as streamlit_runtime_exists
+
+
+def ejecutar_dashboard_streamlit():
+    """Dashboard interactivo de estadios del Mundial 2026 con Streamlit y Plotly."""
+    st.set_page_config(
+        page_title="Mundial 2026 - Estadios", layout="wide"
+    )
+    st.title("Mundial 2026 — Estadios en Norteamérica")
+    st.caption(
+        "Tamaño de burbuja = partidos jugados | Color = goles marcados"
+    )
+
+    df_partidos = pd.read_excel(RUTA_PARTIDOS_WC26)
+    df_eventos = (
+        pd.read_excel("data/eventosWC26.xlsx")
+        if os.path.exists("data/eventosWC26.xlsx")
+        else pd.DataFrame()
+    )
+
+    # Asegura que existan coordenadas (y corrige BBVA / Akron si aún no estaban)
+    if os.path.exists(RUTA_EXCEL_ESTADIOS):
+        df_est = pd.read_excel(RUTA_EXCEL_ESTADIOS)
+        if df_est["latitud"].isna().any() or df_est["longitud"].isna().any():
+            df_est = geocodificar_estadios_wc26()
+    else:
+        df_est = geocodificar_estadios_wc26()
+
+    # Calcular goles por partido desde eventosWC26.xlsx (con respaldo en marcadores)
+    goles_por_id = {}
+    if not df_eventos.empty and {"tipo_evento", "index_partido"}.issubset(
+        df_eventos.columns
+    ):
+        goles_df = df_eventos[
+            df_eventos["tipo_evento"].astype(str).str.strip().str.lower()
+            == "gol"
+        ]
+        goles_por_id = goles_df.groupby("index_partido").size().to_dict()
+
+    goles_lista = []
+    for idx, fila in df_partidos.iterrows():
+        if (idx + 1) in goles_por_id:
+            goles_lista.append(int(goles_por_id[idx + 1]))
+        elif idx in goles_por_id:
+            goles_lista.append(int(goles_por_id[idx]))
+        else:
+            ml = pd.to_numeric(fila.get("marcador_local", 0), errors="coerce")
+            mv = pd.to_numeric(
+                fila.get("marcador_visitante", 0), errors="coerce"
+            )
+            goles_lista.append(
+                int((0 if pd.isna(ml) else ml) + (0 if pd.isna(mv) else mv))
+            )
+
+    df_partidos = df_partidos.copy()
+    df_partidos["goles_partido"] = goles_lista
+
+    # Selector de ronda
+    rondas = ["Todas"] + sorted(
+        df_partidos["ronda"].dropna().astype(str).str.strip().unique().tolist()
+    )
+    ronda_sel = st.selectbox("Selecciona la ronda", rondas, index=0)
+
+    if ronda_sel != "Todas":
+        df_partidos = df_partidos[
+            df_partidos["ronda"].astype(str).str.strip() == ronda_sel
+        ]
+
+    resumen = (
+        df_partidos.groupby("estadio", as_index=False)
+        .agg(
+            partidos_jugados=("estadio", "count"),
+            goles_marcados=("goles_partido", "sum"),
+        )
+        .merge(
+            df_est[["estadio", "ciudad_partido", "pais_partido", "latitud", "longitud"]],
+            on="estadio",
+            how="left",
+        )
+        .dropna(subset=["latitud", "longitud"])
+    )
+
+    fig = px.scatter_geo(
+        resumen,
+        lat="latitud",
+        lon="longitud",
+        scope="north america",
+        size="partidos_jugados",
+        color="goles_marcados",
+        hover_name="estadio",
+        hover_data={
+            "ciudad_partido": True,
+            "pais_partido": True,
+            "partidos_jugados": True,
+            "goles_marcados": True,
+            "latitud": ":.4f",
+            "longitud": ":.4f",
+        },
+        size_max=35,
+        color_continuous_scale="Viridis",
+        title=f"Estadios del Mundial 2026 — Ronda: {ronda_sel}",
+    )
+    fig.update_layout(height=600)
+    st.plotly_chart(fig, use_container_width=True)
+    st.dataframe(resumen, use_container_width=True, hide_index=True)
+
+
+
 def main():
-    """flujo principal: carga datos, consolida desde cache/API y guarda el Excel"""
+    """flujo principal: ejecuta dashboard en Streamlit o flujo batch en Python"""
+    if streamlit_runtime_exists():
+        ejecutar_dashboard_streamlit()
+        return
+
     df = pd.read_excel(EXCEL_ENTRADA)
     cache = cargar_cache()
-    cache.setdefault("teams", {})["México"] = 16  #ID verificado para mexico
+    cache.setdefault("teams", {})["México"] = 16  # ID verificado para mexico
 
     print(
         f"Total selecciones: {df['seleccion_nacional'].nunique()} | Total"
@@ -581,6 +838,7 @@ def main():
     )
 
     analizar_y_graficar_nacimientos(df)
+    geocodificar_estadios_wc26()
 
 
 if __name__ == "__main__":
