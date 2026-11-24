@@ -1,0 +1,5 @@
+En cuanto a la disponibilidad de los datos, de los 1.248 jugadores totales del dataset hemos conseguido recuperar la fecha de nacimiento de 897 (quedando 351 como "No disponible"),
+la altura de 881 (367 sin dato) y el peso de 867 (381 sin dato). Que haya jugadores sin información se debe principalmente a tres motivos: primero, las restricciones del plan gratuito de API-Football, 
+que solo deja consultar las temporadas 2022, 2023 y 2024, con un límite de 3 páginas por selección y 100 peticiones diarias, por lo que algunos convocados más recientes o de plantillas más amplias no aparecen
+en esas páginas; segundo, diferencias a la hora de cruzar los nombres entre el Excel y la API (apodos futbolísticos, nombres compuestos o distintas grafías que no siempre casan pese a normalizar textos y aplicar búsqueda flexible);
+y tercero, casos en los que el jugador sí existe en la API pero su ficha tiene alguno de esos campos vacío, por lo que siguiendo el enunciado lo hemos marcado explícitamente como "No disponible".
