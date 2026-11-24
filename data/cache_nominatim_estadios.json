@@ -1,0 +1,178 @@
+{
+  "estadio azteca (banorte), mexico city, mexico": {
+    "lat": 19.3029794,
+    "lon": -99.15047,
+    "display_name": "Estadio Banorte, Circuito Estadio Banorte, Ex-ejido de Santa Úrsula Coapa, Santa Úrsula Coapa, Ciudad de México, Coyoacán, Ciudad de México, 04600, México"
+  },
+  "estadio bbva, monterrey, mexico": {
+    "lat": null,
+    "lon": null,
+    "display_name": "No disponible"
+  },
+  "estadio akron, guadalajara, mexico": {
+    "lat": null,
+    "lon": null,
+    "display_name": "No disponible"
+  },
+  "bmo field, toronto, canada": {
+    "lat": 43.6333414,
+    "lon": -79.4185614,
+    "display_name": "BMO Field, 170, Princes' Boulevard, Fort York-Liberty Village, Spadina—Fort York, Toronto, Ontario, M6K 3C3, Canada"
+  },
+  "bc place, vancouver, canada": {
+    "lat": 49.2766905,
+    "lon": -123.1120062,
+    "display_name": "BC Place, 777, Pacific Boulevard, Downtown, Vancouver, Metro Vancouver Regional District, British Columbia, V6B 6G2, Canada"
+  },
+  "metlife stadium, east rutherford, united states": {
+    "lat": 40.8135071,
+    "lon": -74.0743442,
+    "display_name": "MetLife Stadium, 1, MetLife Stadium Drive, East Rutherford, Bergen County, New Jersey, 07073, United States"
+  },
+  "sofi stadium, inglewood, united states": {
+    "lat": 33.9534074,
+    "lon": -118.3390098,
+    "display_name": "SoFi Stadium, 1001, Champions Way, Hollywood Park, Morningside Park, Inglewood, Los Angeles County, California, 90301, United States"
+  },
+  "at&t stadium, arlington, united states": {
+    "lat": 32.7478503,
+    "lon": -97.0928337,
+    "display_name": "AT&T Stadium, 1, AT&T Way, Arlington, Tarrant County, Texas, 76011, United States"
+  },
+  "hard rock stadium, miami gardens, united states": {
+    "lat": 25.9579032,
+    "lon": -80.2388497,
+    "display_name": "Hard Rock Stadium, 347, Don Shula Drive, Lake Lucerne, Miami Gardens, Miami-Dade County, Florida, 33056, United States"
+  },
+  "mercedes-benz stadium, atlanta, united states": {
+    "lat": 33.7554123,
+    "lon": -84.4008493,
+    "display_name": "Mercedes-Benz Stadium, 1414, Andrew Young International Boulevard, Atlanta, Fulton County, Georgia, 30313, United States"
+  },
+  "nrg stadium, houston, united states": {
+    "lat": 29.6848581,
+    "lon": -95.4108015,
+    "display_name": "Reliant Stadium, 1, Kirby Drive, Houston, Harris County, Texas, 77054, United States"
+  },
+  "lincoln financial field, philadelphia, united states": {
+    "lat": 39.9009099,
+    "lon": -75.1674892,
+    "display_name": "Lincoln Financial Field, 1, South Darien Street, South Philadelphia, Philadelphia, Philadelphia County, Pennsylvania, 19147, United States"
+  },
+  "lumen field, seattle, united states": {
+    "lat": 47.5953459,
+    "lon": -122.3316443,
+    "display_name": "Lumen Field, 800, Occidental Avenue South, Yesler Terrace, Seattle, King County, Washington, 98134, United States"
+  },
+  "levi's stadium, santa clara, united states": {
+    "lat": 37.4029867,
+    "lon": -121.9696489,
+    "display_name": "Levi’s Stadium, 4900, Marie P. DeBartolo Way, Agnew, Santa Clara, Santa Clara County, California, 95054, United States"
+  },
+  "gillette stadium, foxborough, united states": {
+    "lat": 42.0908879,
+    "lon": -71.2641731,
+    "display_name": "Gillette Stadium, 1, Patriot Place, Foxborough, Norfolk County, Massachusetts, 02035, United States"
+  },
+  "arrowhead stadium, kansas city, united states": {
+    "lat": 39.0489358,
+    "lon": -94.4839993,
+    "display_name": "Arrowhead Stadium, 1, Arrowhead Drive, Kansas City, Jackson County, Missouri, 64129, United States"
+  },
+  "mexico city stadium (estadio azteca), mexico city, méxico": {
+    "lat": 19.3207722,
+    "lon": -99.1514677,
+    "display_name": "Ciudad de México, México",
+    "query_usada": "Mexico City, México"
+  },
+  "guadalajara stadium (estadio akron), zapopan, méxico": {
+    "lat": 20.7211203,
+    "lon": -103.3913671,
+    "display_name": "Zapopan, Región Centro, Jalisco, 45101, México",
+    "query_usada": "Zapopan, México"
+  },
+  "toronto stadium (bmo field), toronto, canadá": {
+    "lat": 43.6534817,
+    "lon": -79.3839347,
+    "display_name": "Toronto, Ontario, Canada",
+    "query_usada": "Toronto, Canadá"
+  },
+  "los angeles stadium (sofi stadium), inglewood, estados unidos": {
+    "lat": 33.9562003,
+    "lon": -118.353132,
+    "display_name": "Inglewood, Los Angeles County, California, United States",
+    "query_usada": "Inglewood, Estados Unidos"
+  },
+  "boston stadium (gillette stadium), foxborough, estados unidos": {
+    "lat": 42.0908879,
+    "lon": -71.2641731,
+    "display_name": "Gillette Stadium, 1, Patriot Place, Foxborough, Norfolk County, Massachusetts, 02035, United States",
+    "query_usada": "Boston Stadium (Gillette Stadium), Foxborough, Estados Unidos"
+  },
+  "new york new jersey stadium (metlife stadium), east rutherford, estados unidos": {
+    "lat": 40.8135071,
+    "lon": -74.0743442,
+    "display_name": "MetLife Stadium, 1, MetLife Stadium Drive, East Rutherford, Bergen County, New Jersey, 07073, United States",
+    "query_usada": "New York New Jersey Stadium (MetLife Stadium), East Rutherford, Estados Unidos"
+  },
+  "philadelphia stadium (lincoln financial field), philadelphia, estados unidos": {
+    "lat": 39.9527237,
+    "lon": -75.1635262,
+    "display_name": "Philadelphia, Philadelphia County, Pennsylvania, United States",
+    "query_usada": "Philadelphia, Estados Unidos"
+  },
+  "seattle stadium (lumen field), seattle, estados unidos": {
+    "lat": 47.6038321,
+    "lon": -122.330062,
+    "display_name": "Seattle, King County, Washington, United States",
+    "query_usada": "Seattle, Estados Unidos"
+  },
+  "atlanta stadium (mercedes-benz stadium), atlanta, estados unidos": {
+    "lat": 33.7544657,
+    "lon": -84.3898151,
+    "display_name": "Atlanta, Fulton County, Georgia, United States",
+    "query_usada": "Atlanta, Estados Unidos"
+  },
+  "san francisco bay area stadium (levi's stadium), santa clara, estados unidos": {
+    "lat": 37.2333253,
+    "lon": -121.6846349,
+    "display_name": "Santa Clara County, California, United States",
+    "query_usada": "Santa Clara, Estados Unidos"
+  },
+  "houston stadium (nrg stadium), houston, estados unidos": {
+    "lat": 29.7589382,
+    "lon": -95.3676974,
+    "display_name": "Houston, Harris County, Texas, United States",
+    "query_usada": "Houston, Estados Unidos"
+  },
+  "kansas city stadium (arrowhead stadium), kansas city, estados unidos": {
+    "lat": 39.100105,
+    "lon": -94.5781416,
+    "display_name": "Kansas City, Jackson County, Missouri, United States",
+    "query_usada": "Kansas City, Estados Unidos"
+  },
+  "miami stadium (hard rock stadium), miami gardens, estados unidos": {
+    "lat": 25.9420377,
+    "lon": -80.2456045,
+    "display_name": "Miami Gardens, Miami-Dade County, Florida, United States",
+    "query_usada": "Miami Gardens, Estados Unidos"
+  },
+  "dallas stadium (at&t stadium), arlington, estados unidos": {
+    "lat": 32.7355816,
+    "lon": -97.1071186,
+    "display_name": "Arlington, Tarrant County, Texas, United States",
+    "query_usada": "Arlington, Estados Unidos"
+  },
+  "monterrey stadium (estadio bbva), guadalupe, méxico": {
+    "lat": 25.6751114,
+    "lon": -100.2151753,
+    "display_name": "Guadalupe, Nuevo León, 67180, México",
+    "query_usada": "Guadalupe, México"
+  },
+  "vancouver stadium (bc place), vancouver, canadá": {
+    "lat": 49.2608724,
+    "lon": -123.113952,
+    "display_name": "Vancouver, Metro Vancouver Regional District, British Columbia, Canada",
+    "query_usada": "Vancouver, Canadá"
+  }
+}
